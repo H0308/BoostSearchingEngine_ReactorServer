@@ -1,15 +1,15 @@
-#ifndef __rs_http_context_h__
-#define __rs_http_context_h__
+#ifndef __bs_http_context_h__
+#define __bs_http_context_h__
 
-#include <reactor_server/base/log.h>
-#include <reactor_server/net/buffer.h>
-#include <reactor_server/net/http/http_request.h>
-#include <reactor_server/net/http/utils/common_op.h>
-#include <reactor_server/net/http/utils/url_op.h>
+#include <boost_search/base/log.h>
+#include <boost_search/net/buffer.h>
+#include <boost_search/net/http/http_request.h>
+#include <boost_search/utils/common_op.h>
+#include <boost_search/utils/url_op.h>
 
-namespace rs_http_context
+namespace bs_http_context
 {
-    using namespace log_system;
+    using namespace bs_log_system;
 
     enum class ReqRecvStatus
     {
@@ -43,7 +43,7 @@ namespace rs_http_context
             return recv_status_;
         }
 
-        rs_http_request::HttpRequest &getRequest()
+        bs_http_request::HttpRequest &getRequest()
         {
             return request_;
         }
@@ -154,43 +154,30 @@ namespace rs_http_context
             request_.setMethod(method);
             std::string decode_path;
             // 路径部分并没有规定空格转加号
-            rs_url_op::UrlOp::urlDecode(decode_path, matches[2].str());
+            bs_url_op::UrlOp::urlDecode(decode_path, matches[2].str());
             request_.setPath(decode_path);
             request_.setVersion(matches[4].str());
 
             // 处理请求参数
             // 按照&对参数部分进行分割
             std::vector<std::string> params;
-            bool ret = rs_common_op::CommonOp::split(params, matches[3].str(), params_sep);
-            // 可能没有参数，不需要处理返回错误
-            // if (!ret)
-            // {
-            //     response_status_ = 400; // Bad Request
-            //     recv_status_ = ReqRecvStatus::RecvError;
-            //     LOG(Level::Warning, "参数错误，请求处理失败");
-            //     return false;
-            // }
+            bool ret = bs_common_op::CommonOp::split(params, matches[3].str(), params_sep);
+
             for (auto &str : params)
             {
                 std::vector<std::string> out;
                 // 按照=进行分割
-                bool ret = rs_common_op::CommonOp::split(out, str, key_value_sep);
-                // 可能没有参数，不需要处理返回错误
-                // if (!ret)
-                // {
-                //     response_status_ = 400; // Bad Request
-                //     recv_status_ = ReqRecvStatus::RecvError;
-                //     LOG(Level::Warning, "参数错误，请求处理失败");
-                //     return false;
-                // }
+                bool ret = bs_common_op::CommonOp::split(out, str, key_value_sep);
 
-                std::string decode_param1;
-                rs_url_op::UrlOp::urlDecode(decode_param1, out[0]);
+                if(out.size() >= 2)
+                {
+                    std::string decode_param1;
+                    bs_url_op::UrlOp::urlDecode(decode_param1, out[0]);
 
-                std::string decode_param2;
-                rs_url_op::UrlOp::urlDecode(decode_param2, out[1]);
-
-                request_.setParam(decode_param1, decode_param2);
+                    std::string decode_param2;
+                    bs_url_op::UrlOp::urlDecode(decode_param2, out[1]);
+                    request_.setParam(decode_param1, decode_param2);
+                }
             }
 
             return true;
@@ -252,7 +239,7 @@ namespace rs_http_context
                 line.pop_back();
 
             std::vector<std::string> key_value;
-            bool ret = rs_common_op::CommonOp::split(key_value, line, header_sep);
+            bool ret = bs_common_op::CommonOp::split(key_value, line, header_sep);
             if (!ret)
             {
                 response_status_ = 400; // Bad Request
@@ -308,7 +295,7 @@ namespace rs_http_context
     private:
         int response_status_;                  // 响应状态码
         ReqRecvStatus recv_status_;            // 请求接收状态
-        rs_http_request::HttpRequest request_; // HTTP请求对象
+        bs_http_request::HttpRequest request_; // HTTP请求对象
     };
 }
 

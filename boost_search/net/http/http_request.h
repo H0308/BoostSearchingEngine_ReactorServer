@@ -1,12 +1,12 @@
-#ifndef __rs_http_request_h__
-#define __rs_http_request_h__
+#ifndef __bs_http_request_h__
+#define __bs_http_request_h__
 
 #include <regex>
 #include <string>
 #include <unordered_map>
 #include <filesystem>
 
-namespace rs_http_request
+namespace bs_http_request
 {
     class HttpRequest
     {
@@ -48,7 +48,7 @@ namespace rs_http_request
         std::string getParam(const std::string &key)
         {
             auto pos = params_.find(key);
-            if (pos == params_.end())
+            if (pos == params_.end() || params_[key] == "")
                 return "";
 
             return params_[key];

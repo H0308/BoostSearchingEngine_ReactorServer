@@ -1,13 +1,13 @@
-#ifndef __rs_http_response_h__
-#define __rs_http_response_h__
+#ifndef __bs_http_response_h__
+#define __bs_http_response_h__
 
 #include <string>
 #include <unordered_map>
 #include <sstream>
-#include <reactor_server/net/http/http_request.h>
-#include <reactor_server/net/http/utils/info_get.h>
+#include <boost_search/net/http/http_request.h>
+#include <boost_search/utils/info_get.h>
 
-namespace rs_http_response
+namespace bs_http_response
 {
     class HttpResponse
     {
@@ -109,11 +109,11 @@ namespace rs_http_response
             headers_.clear();
         }
 
-        std::string constructHttpResponseStr(rs_http_request::HttpRequest &req)
+        std::string constructHttpResponseStr(bs_http_request::HttpRequest &req)
         {
             // 构建响应行
             std::stringstream resp_str;
-            resp_str << req.getVersion() << " " << std::to_string(status_) << " " << rs_info_get::InfoGet::getStatusDesc(status_) << "\r\n";
+            resp_str << req.getVersion() << " " << std::to_string(status_) << " " << bs_info_get::InfoGet::getStatusDesc(status_) << "\r\n";
 
             // 构建响应头
             std::for_each(headers_.begin(), headers_.end(), [&](const std::pair<std::string, std::string> &p){
