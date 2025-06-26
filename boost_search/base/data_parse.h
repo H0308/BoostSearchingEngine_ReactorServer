@@ -8,6 +8,7 @@
 #include <vector>
 #include <boost_search/base/log.h>
 #include <boost_search/base/public_data.h>
+#include <boost_search/utils/file_op.h>
 
 namespace bs_data_parse
 {
@@ -51,9 +52,6 @@ namespace bs_data_parse
                 if (entry.path().extension() != g_html_extension)
                     continue;
 
-                // debug
-                // ls::LOG(ls::LogLevel::DEBUG) << entry.path();
-
                 // 3. 是普通文件并且是HTML文件，插入结果
                 sources_.push_back(std::move(entry.path()));
             }
@@ -68,17 +66,7 @@ namespace bs_data_parse
             if (p.empty())
                 return false;
 
-            std::fstream f(p);
-
-            if (!f.is_open())
-                return false;
-
-            // 读取文件
-            std::string buffer;
-            while (getline(f, buffer))
-                out += buffer;
-
-            f.close();
+            bs_file_op::FileOp::readFile(p, out);
 
             return true;
         }
