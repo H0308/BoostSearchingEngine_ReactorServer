@@ -15,7 +15,7 @@ namespace bs_public_data
     // 不同HTML文件的分隔符
     const std::string g_html_sep = "\n";
     // 网页根路径
-    const std::string root_path = "/home/epsda/BoostSearchingEngine_ReactorServer/boost_search/wwwroot";
+    const std::string root_path = "/home/epsda/BoostSearchingEngine_ReactorServer/boost_search/demo/wwwroot";
 
     // 结果基本内容结构
     struct ResultData
